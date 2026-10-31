@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>OmniAuth Facebook by mkdynamic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">OmniAuth Facebook</h1>
+      <h2 class="project-tagline">Facebook OAuth2 Strategy for OmniAuth</h2>
+      <a href="https://github.com/mkdynamic/omniauth-facebook" class="btn">View on GitHub</a>
+      <a href="https://github.com/mkdynamic/omniauth-facebook/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/mkdynamic/omniauth-facebook/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="omniauth-facebook--" class="anchor" href="#omniauth-facebook--" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>OmniAuth Facebook  <a href="https://travis-ci.org/mkdynamic/omniauth-facebook"><img src="https://secure.travis-ci.org/mkdynamic/omniauth-facebook.svg?branch=master" alt="Build Status"></a> <a href="https://rubygems.org/gems/omniauth-facebook"><img src="https://img.shields.io/gem/v/omniauth-facebook.svg" alt="Gem Version"></a>
+</h1>
+
+<p>Facebook OAuth2 Strategy for OmniAuth.</p>
+
+<p>Supports OAuth 2.0 server-side and client-side flows. Read the Facebook docs for more details: <a href="http://developers.facebook.com/docs/authentication">http://developers.facebook.com/docs/authentication</a></p>
+
+<h2>
+<a id="installing" class="anchor" href="#installing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installing</h2>
+
+<p>Add to your <code>Gemfile</code>:</p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">gem</span> <span class="pl-s"><span class="pl-pds">'</span>omniauth-facebook<span class="pl-pds">'</span></span></pre></div>
+
+<p>Then <code>bundle install</code>.</p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<p><code>OmniAuth::Strategies::Facebook</code> is simply a Rack middleware. Read the OmniAuth docs for detailed instructions: <a href="https://github.com/intridea/omniauth">https://github.com/intridea/omniauth</a>.</p>
+
+<p>Here's a quick example, adding the middleware to a Rails app in <code>config/initializers/omniauth.rb</code>:</p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-c1">Rails</span>.application.config.middleware.use <span class="pl-c1">OmniAuth</span>::<span class="pl-c1">Builder</span> <span class="pl-k">do</span>
+  provider <span class="pl-c1">:facebook</span>, <span class="pl-c1">ENV</span>[<span class="pl-s"><span class="pl-pds">'</span>FACEBOOK_KEY<span class="pl-pds">'</span></span>], <span class="pl-c1">ENV</span>[<span class="pl-s"><span class="pl-pds">'</span>FACEBOOK_SECRET<span class="pl-pds">'</span></span>]
+<span class="pl-k">end</span></pre></div>
+
+<p><a href="https://github.com/mkdynamic/omniauth-facebook/blob/master/example/config.ru">See the example Sinatra app for full examples</a> of both the server and client-side flows (including using the Facebook Javascript SDK).</p>
+
+<h2>
+<a id="configuring" class="anchor" href="#configuring" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuring</h2>
+
+<p>You can configure several options, which you pass in to the <code>provider</code> method via a <code>Hash</code>:</p>
+
+<table>
+<thead>
+<tr>
+<th>Option name</th>
+<th>Default</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scope</code></td>
+<td><code>email</code></td>
+<td>A comma-separated list of permissions you want to request from the user. See the Facebook docs for a full list of available permissions: <a href="https://developers.facebook.com/docs/reference/login/">https://developers.facebook.com/docs/reference/login/</a>
+</td>
+</tr>
+<tr>
+<td><code>display</code></td>
+<td><code>page</code></td>
+<td>The display context to show the authentication page. Options are: <code>page</code>, <code>popup</code> and <code>touch</code>. Read the Facebook docs for more details: <a href="https://developers.facebook.com/docs/reference/dialogs/oauth/">https://developers.facebook.com/docs/reference/dialogs/oauth/</a>
+</td>
+</tr>
+<tr>
+<td><code>image_size</code></td>
+<td><code>square</code></td>
+<td>Set the size for the returned image url in the auth hash. Valid options include <code>square</code> (50x50), <code>small</code> (50 pixels wide, variable height), <code>normal</code> (100 pixels wide, variable height), or <code>large</code> (about 200 pixels wide, variable height). Additionally, you can request a picture of a specific size by setting this option to a hash with <code>:width</code> and <code>:height</code> as keys. This will return an available profile picture closest to the requested size and requested aspect ratio. If only <code>:width</code> or <code>:height</code> is specified, we will return a picture whose width or height is closest to the requested size, respectively.</td>
+</tr>
+<tr>
+<td><code>info_fields</code></td>
+<td>'name,email'</td>
+<td>Specify exactly which fields should be returned when getting the user's info. Value should be a comma-separated string as per <a href="https://developers.facebook.com/docs/graph-api/reference/user/">https://developers.facebook.com/docs/graph-api/reference/user/</a> (only <code>/me</code> endpoint).</td>
+</tr>
+<tr>
+<td><code>locale</code></td>
+<td></td>
+<td>Specify locale which should be used when getting the user's info. Value should be locale string as per <a href="https://developers.facebook.com/docs/reference/api/locale/">https://developers.facebook.com/docs/reference/api/locale/</a>.</td>
+</tr>
+<tr>
+<td><code>auth_type</code></td>
+<td></td>
+<td>Optionally specifies the requested authentication features as a comma-separated list, as per <a href="https://developers.facebook.com/docs/facebook-login/reauthentication/">https://developers.facebook.com/docs/facebook-login/reauthentication/</a>. Valid values are <code>https</code> (checks for the presence of the secure cookie and asks for re-authentication if it is not present), and <code>reauthenticate</code> (asks the user to re-authenticate unconditionally). Use 'rerequest' when you want to request premissions. Default is <code>nil</code>.</td>
+</tr>
+<tr>
+<td><code>secure_image_url</code></td>
+<td><code>false</code></td>
+<td>Set to <code>true</code> to use https for the avatar image url returned in the auth hash.</td>
+</tr>
+<tr>
+<td>
+<code>callback_url</code> / <code>callback_path</code>
+</td>
+<td></td>
+<td>Specify a custom callback URL used during the server-side flow. Note this must be allowed by your app configuration on Facebook (see 'Valid OAuth redirect URIs' under the 'Advanced' settings section in the configuration for your Facebook app for more details).</td>
+</tr>
+</tbody>
+</table>
+
+<p>For example, to request <code>email</code>, <code>user_birthday</code> and <code>read_stream</code> permissions and display the authentication page in a popup window:</p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-c1">Rails</span>.application.config.middleware.use <span class="pl-c1">OmniAuth</span>::<span class="pl-c1">Builder</span> <span class="pl-k">do</span>
+  provider <span class="pl-c1">:facebook</span>, <span class="pl-c1">ENV</span>[<span class="pl-s"><span class="pl-pds">'</span>APP_ID<span class="pl-pds">'</span></span>], <span class="pl-c1">ENV</span>[<span class="pl-s"><span class="pl-pds">'</span>APP_SECRET<span class="pl-pds">'</span></span>],
+    <span class="pl-c1">scope:</span> <span class="pl-s"><span class="pl-pds">'</span>email,user_birthday,read_stream<span class="pl-pds">'</span></span>, <span class="pl-c1">display:</span> <span class="pl-s"><span class="pl-pds">'</span>popup<span class="pl-pds">'</span></span>
+<span class="pl-k">end</span></pre></div>
+
+<h3>
+<a id="api-version" class="anchor" href="#api-version" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>API Version</h3>
+
+<p>OmniAuth Facebook uses versioned API endpoints by default (current v2.6). You can configure a different version via <code>client_options</code> hash passed to <code>provider</code>, specifically you should change the version in the <code>site</code> and <code>authorize_url</code> parameters. For example, to change to v3.0 (assuming that exists):</p>
+
+<div class="highlight highlight-source-ruby"><pre>use <span class="pl-c1">OmniAuth</span>::<span class="pl-c1">Builder</span> <span class="pl-k">do</span>
+  provider <span class="pl-c1">:facebook</span>, <span class="pl-c1">ENV</span>[<span class="pl-s"><span class="pl-pds">'</span>APP_ID<span class="pl-pds">'</span></span>], <span class="pl-c1">ENV</span>[<span class="pl-s"><span class="pl-pds">'</span>APP_SECRET<span class="pl-pds">'</span></span>],
+    <span class="pl-c1">client_options:</span> {
+      <span class="pl-c1">site:</span> <span class="pl-s"><span class="pl-pds">'</span>https://graph.facebook.com/v3.0<span class="pl-pds">'</span></span>,
+      <span class="pl-c1">authorize_url:</span> <span class="pl-s"><span class="pl-pds">"</span>https://www.facebook.com/v3.0/dialog/oauth<span class="pl-pds">"</span></span>
+    }
+<span class="pl-k">end</span></pre></div>
+
+<h3>
+<a id="per-request-options" class="anchor" href="#per-request-options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Per-Request Options</h3>
+
+<p>If you want to set the <code>display</code> format, <code>auth_type</code>, or <code>scope</code> on a per-request basis, you can just pass it to the OmniAuth request phase URL, for example: <code>/auth/facebook?display=popup</code> or <code>/auth/facebook?scope=email</code>.</p>
+
+<h2>
+<a id="auth-hash" class="anchor" href="#auth-hash" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Auth Hash</h2>
+
+<p>Here's an example <em>Auth Hash</em> available in <code>request.env['omniauth.auth']</code>:</p>
+
+<div class="highlight highlight-source-ruby"><pre>{
+  <span class="pl-c1">provider:</span> <span class="pl-s"><span class="pl-pds">'</span>facebook<span class="pl-pds">'</span></span>,
+  <span class="pl-c1">uid:</span> <span class="pl-s"><span class="pl-pds">'</span>1234567<span class="pl-pds">'</span></span>,
+  <span class="pl-c1">info:</span> {
+    <span class="pl-c1">email:</span> <span class="pl-s"><span class="pl-pds">'</span>joe@bloggs.com<span class="pl-pds">'</span></span>,
+    <span class="pl-c1">name:</span> <span class="pl-s"><span class="pl-pds">'</span>Joe Bloggs<span class="pl-pds">'</span></span>,
+    <span class="pl-c1">first_name:</span> <span class="pl-s"><span class="pl-pds">'</span>Joe<span class="pl-pds">'</span></span>,
+    <span class="pl-c1">last_name:</span> <span class="pl-s"><span class="pl-pds">'</span>Bloggs<span class="pl-pds">'</span></span>,
+    <span class="pl-c1">image:</span> <span class="pl-s"><span class="pl-pds">'</span>http://graph.facebook.com/1234567/picture?type=square<span class="pl-pds">'</span></span>,
+    <span class="pl-c1">urls:</span> { <span class="pl-c1">Facebook:</span> <span class="pl-s"><span class="pl-pds">'</span>http://www.facebook.com/jbloggs<span class="pl-pds">'</span></span> },
+    <span class="pl-c1">location:</span> <span class="pl-s"><span class="pl-pds">'</span>Palo Alto, California<span class="pl-pds">'</span></span>,
+    <span class="pl-c1">verified:</span> <span class="pl-c1">true</span>
+  },
+  <span class="pl-c1">credentials:</span> {
+    <span class="pl-c1">token:</span> <span class="pl-s"><span class="pl-pds">'</span>ABCDEF...<span class="pl-pds">'</span></span>, <span class="pl-c"># OAuth 2.0 access_token, which you may wish to store</span>
+    <span class="pl-c1">expires_at:</span> <span class="pl-c1">1321747205</span>, <span class="pl-c"># when the access token expires (it always will)</span>
+    <span class="pl-c1">expires:</span> <span class="pl-c1">true</span> <span class="pl-c"># this will always be true</span>
+  },
+  <span class="pl-c1">extra:</span> {
+    <span class="pl-c1">raw_info:</span> {
+      <span class="pl-c1">id:</span> <span class="pl-s"><span class="pl-pds">'</span>1234567<span class="pl-pds">'</span></span>,
+      <span class="pl-c1">name:</span> <span class="pl-s"><span class="pl-pds">'</span>Joe Bloggs<span class="pl-pds">'</span></span>,
+      <span class="pl-c1">first_name:</span> <span class="pl-s"><span class="pl-pds">'</span>Joe<span class="pl-pds">'</span></span>,
+      <span class="pl-c1">last_name:</span> <span class="pl-s"><span class="pl-pds">'</span>Bloggs<span class="pl-pds">'</span></span>,
+      <span class="pl-c1">link:</span> <span class="pl-s"><span class="pl-pds">'</span>http://www.facebook.com/jbloggs<span class="pl-pds">'</span></span>,
+      <span class="pl-c1">username:</span> <span class="pl-s"><span class="pl-pds">'</span>jbloggs<span class="pl-pds">'</span></span>,
+      <span class="pl-c1">location:</span> { <span class="pl-c1">id:</span> <span class="pl-s"><span class="pl-pds">'</span>123456789<span class="pl-pds">'</span></span>, <span class="pl-c1">name:</span> <span class="pl-s"><span class="pl-pds">'</span>Palo Alto, California<span class="pl-pds">'</span></span> },
+      <span class="pl-c1">gender:</span> <span class="pl-s"><span class="pl-pds">'</span>male<span class="pl-pds">'</span></span>,
+      <span class="pl-c1">email:</span> <span class="pl-s"><span class="pl-pds">'</span>joe@bloggs.com<span class="pl-pds">'</span></span>,
+      <span class="pl-c1">timezone:</span> <span class="pl-k">-</span><span class="pl-c1">8</span>,
+      <span class="pl-c1">locale:</span> <span class="pl-s"><span class="pl-pds">'</span>en_US<span class="pl-pds">'</span></span>,
+      <span class="pl-c1">verified:</span> <span class="pl-c1">true</span>,
+      <span class="pl-c1">updated_time:</span> <span class="pl-s"><span class="pl-pds">'</span>2011-11-11T06:21:03+0000<span class="pl-pds">'</span></span>,
+      <span class="pl-c"># ...</span>
+    }
+  }
+}</pre></div>
+
+<p>The precise information available may depend on the permissions which you request.</p>
+
+<h2>
+<a id="client-side-flow-with-facebook-javascript-sdk" class="anchor" href="#client-side-flow-with-facebook-javascript-sdk" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Client-side Flow with Facebook Javascript SDK</h2>
+
+<p>You can use the Facebook Javascript SDK with <code>FB.login</code>, and just hit the callback endpoint (<code>/auth/facebook/callback</code> by default) once the user has authenticated in the success callback.</p>
+
+<p><strong>Note that you must enable cookies in the <code>FB.init</code> config for this process to work.</strong></p>
+
+<p>See the example Sinatra app under <code>example/</code> and read the <a href="https://developers.facebook.com/docs/facebook-login/login-flow-for-web/">Facebook docs on Login for JavaScript</a> for more details.</p>
+
+<h3>
+<a id="how-it-works" class="anchor" href="#how-it-works" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How it Works</h3>
+
+<p>The client-side flow is supported by parsing the authorization code from the signed request which Facebook places in a cookie.</p>
+
+<p>When you call <code>/auth/facebook/callback</code> in the success callback of <code>FB.login</code> that will pass the cookie back to the server. omniauth-facebook will see this cookie and:</p>
+
+<ol>
+<li>parse it,</li>
+<li>extract the authorization code contained in it</li>
+<li>and hit Facebook and obtain an access token which will get placed in the <code>request.env['omniauth.auth']['credentials']</code> hash.</li>
+</ol>
+
+<h2>
+<a id="token-expiry" class="anchor" href="#token-expiry" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Token Expiry</h2>
+
+<p>The expiration time of the access token you obtain will depend on which flow you are using.</p>
+
+<h3>
+<a id="client-side-flow" class="anchor" href="#client-side-flow" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Client-Side Flow</h3>
+
+<p>If you use the client-side flow, Facebook will give you back a short lived access token (~ 2 hours).</p>
+
+<p>You can exchange this short lived access token for a longer lived version. Read the <a href="https://developers.facebook.com/docs/facebook-login/access-tokens/">Facebook docs</a> for more information on exchanging a short lived token for a long lived token.</p>
+
+<h3>
+<a id="server-side-flow" class="anchor" href="#server-side-flow" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Server-Side Flow</h3>
+
+<p>If you use the server-side flow, Facebook will give you back a longer lived access token (~ 60 days).</p>
+
+<h2>
+<a id="supported-rubies" class="anchor" href="#supported-rubies" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Supported Rubies</h2>
+
+<ul>
+<li>Ruby MRI (1.9.3+)</li>
+<li>JRuby (1.9 mode)</li>
+<li>RBX (2.1.1+)</li>
+</ul>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<p>Copyright (c) 2012 by Mark Dodwell</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/mkdynamic/omniauth-facebook">OmniAuth Facebook</a> is maintained by <a href="https://github.com/mkdynamic">mkdynamic</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
